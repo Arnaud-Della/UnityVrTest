@@ -10,7 +10,7 @@ public class AvatarFactoryScript : MonoBehaviour
     [SerializeField]
     private string avatarURL = "https://api.readyplayer.me/v1/avatars/63400e863dd6383c5cb554c1.glb";
     private GameObject avatar;
-    private List<Transform> HumanBones = new List<Transform>();
+    private List<Transform> HumanBones;
     private void Start()
     {
         CreateNewAvatar(avatarURL);
@@ -41,8 +41,7 @@ public class AvatarFactoryScript : MonoBehaviour
         // On recupere le squelettes de l'avatar sous forme de Liste
         Animator myAnimator = avatar.GetComponent<Animator>();
         GetAllHumanoidBones(myAnimator);
-        // On oublie pas de remettre la source de l'avatar a null ainsi que le runtimecontroller, sinon erreur (chimpanzé)
-        myAnimator.avatar = null;
+        // On oublie pas de remettre le runtimecontroller, sinon erreur (chimpanzé)
         myAnimator.runtimeAnimatorController = null;
 
         // On ajoute a l'avatar de nouveau components, RigBuilder et BoneRenderer
@@ -106,15 +105,30 @@ public class AvatarFactoryScript : MonoBehaviour
         var tamp = new WeightedTransformArray();
         tamp.Add(new WeightedTransform(TeteContrainte.transform, 1f));
         multiParentConstraint.data.sourceObjects = tamp;
+
         TeteContrainte.transform.position = HumanBones[10].transform.position;
         TeteContrainte.transform.rotation = HumanBones[10].transform.rotation;
+
         multiParentConstraint.data.constrainedPositionXAxis = true;
         multiParentConstraint.data.constrainedPositionYAxis = true;
         multiParentConstraint.data.constrainedPositionZAxis = true;
         multiParentConstraint.data.constrainedRotationXAxis = true;
         multiParentConstraint.data.constrainedRotationYAxis = true;
         multiParentConstraint.data.constrainedRotationZAxis = true;
-        
+
+        VRRig VRRigScript = avatar.AddComponent<VRRig>();
+        VRRigScript.headConstraint = TeteContrainte.transform;
+        VRMap VRMapLeftHand = new VRMap(GameObject.Find("ManetteGauche").transform, TargetGauche.transform, new Vector3(0, 0, 0), new Vector3(-90, 90, 0));
+        VRMap VRMapRightHand = new VRMap(GameObject.Find("ManetteDroite").transform, TargetDroit.transform, new Vector3(0, 0, 0), new Vector3(90, -90, 0));
+        VRMap VRMapTeteContrainte = new VRMap(GameObject.Find("Casque").transform, TeteContrainte.transform, new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+        VRRigScript.head = VRMapTeteContrainte;
+        VRRigScript.leftHand = VRMapLeftHand;
+        VRRigScript.rightHand = VRMapRightHand;
+        VRRigScript.turnSmoothness = 3;
+
+
+        Debug.Log($"Avatar loaded Finish");
+        myAnimator.avatar = null;
         myRigBuilder.Build();
     }
 
@@ -132,6 +146,7 @@ public class AvatarFactoryScript : MonoBehaviour
 
     private Transform[] GetAllHumanoidBones(Animator _animator)
     {
+        HumanBones = new List<Transform>();
 
         if (_animator == null) return null;
 
