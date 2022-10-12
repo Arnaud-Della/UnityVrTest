@@ -100,6 +100,21 @@ public class AvatarFactoryScript : MonoBehaviour
         HintGauche.transform.rotation = HumanBones[15].transform.rotation;
 
 
+        GameObject TeteContrainte = addNewNode(MyRig, "TeteContrainte");
+        MultiParentConstraint multiParentConstraint = TeteContrainte.AddComponent<MultiParentConstraint>();
+        multiParentConstraint.data.constrainedObject = HumanBones[10];
+        var tamp = new WeightedTransformArray();
+        tamp.Add(new WeightedTransform(TeteContrainte.transform, 1f));
+        multiParentConstraint.data.sourceObjects = tamp;
+        TeteContrainte.transform.position = HumanBones[10].transform.position;
+        TeteContrainte.transform.rotation = HumanBones[10].transform.rotation;
+        multiParentConstraint.data.constrainedPositionXAxis = true;
+        multiParentConstraint.data.constrainedPositionYAxis = true;
+        multiParentConstraint.data.constrainedPositionZAxis = true;
+        multiParentConstraint.data.constrainedRotationXAxis = true;
+        multiParentConstraint.data.constrainedRotationYAxis = true;
+        multiParentConstraint.data.constrainedRotationZAxis = true;
+        
         myRigBuilder.Build();
     }
 
