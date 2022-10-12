@@ -11,6 +11,8 @@ public class AvatarFactoryScript : MonoBehaviour
     private string avatarURL = "https://api.readyplayer.me/v1/avatars/63400e863dd6383c5cb554c1.glb";
     private GameObject avatar;
     private List<Transform> HumanBones;
+    public RuntimeAnimatorController ControllerAnimator;
+    public Avatar SqueletteAvatarAnimator;
     private void Start()
     {
         CreateNewAvatar(avatarURL);
@@ -128,8 +130,15 @@ public class AvatarFactoryScript : MonoBehaviour
 
 
         Debug.Log($"Avatar loaded Finish");
-        myAnimator.avatar = null;
+        myAnimator.avatar = SqueletteAvatarAnimator;
+        myAnimator.runtimeAnimatorController = ControllerAnimator;
         myRigBuilder.Build();
+
+        MoveScript moveScript = avatar.AddComponent<MoveScript>();
+        moveScript.speed = 1;
+        moveScript.Casque = GameObject.Find("Casque");
+        moveScript.ManetteDroite = GameObject.Find("ManetteDroite");
+        moveScript.ManetteGauche = GameObject.Find("ManetteGauche");
     }
 
     private GameObject addNewNode(GameObject parentOb, string name)

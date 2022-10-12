@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fd5b11266af29b4887907ee8c26d097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  avatarURL: https://api.readyplayer.me/v1/avatars/63400e863dd6383c5cb554c1.glb
+  ControllerAnimator: {fileID: 9100000, guid: b9265456b4d9bc04593468b0675411a8, type: 2}
+  SqueletteAvatarAnimator: {fileID: 9000000, guid: ba5173a85368a4f4eb45fbc497be292c, type: 2}
